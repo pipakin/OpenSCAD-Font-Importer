@@ -523,18 +523,21 @@ def create_letter_if(charcode,module,height):
 	letter_output += '    }' + os.linesep
 	return letter_output
 
-def create_string_if(string,bboxes,module,height):
+def create_string_if(string,bboxes,module,height,spacing,space,spacewidth):
 	string_full_output = '    if(charcode == "' + string + '"){'+os.linesep
 	string_output = ''
 	offset = 0
 	for character in string:
 		if character == ' ':
-			charcodex = ord('x')
-			offset += bboxes[charcodex][1][0]
+			charcodex = ord(space)
+			if spacewidth != -999:
+				offset += spacewidth
+			else:
+				offset += bboxes[charcodex][1][0] + spacing
 		else:
 			charcode = ord(character)
 			string_output += '                translate([' + str(offset) + ',0,0]) ' + module + '_letter' + hex(charcode) + '(steps);'+os.linesep
-			offset += bboxes[charcode][1][0]
+			offset += bboxes[charcode][1][0] + spacing
 		
 	string_full_output += '        if(center==true){'+os.linesep
 	string_full_output += '            translate([-' + str(offset) + '/2,0,0]){'+os.linesep
@@ -569,6 +572,9 @@ if __name__ == '__main__':
 	parser.add_option('-m','--module', dest='module', default='FreeSerif', help='module name');
 	parser.add_option('--strings', dest='stringsfile', default='', help='strings file');
 	parser.add_option('--height', dest='height', default='10', help='height');
+	parser.add_option('--spacing', dest='spacing', default='0', help='height');
+	parser.add_option('--space', dest='space', default='x', help='height');
+	parser.add_option('--spacewidth', dest='spacewidth', default='-999', help='height');
 
 	(options, _) = parser.parse_args()
 
@@ -610,7 +616,7 @@ if __name__ == '__main__':
 			line = file.readline().rstrip()
 			if not line:
 				break
-			module_output += create_string_if(line,bboxes,options.module,int(options.height,10))
+			module_output += create_string_if(line,bboxes,options.module,int(options.height,10),int(options.spacing,10),options.space,int(options.spacewidth,10))
 		
 	module_output += '}'
 	output += os.linesep*2 + module_output
