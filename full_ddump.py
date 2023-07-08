@@ -114,9 +114,9 @@ def getangle_change(p0,p1,p2):
 	vectnew = getdiff(p1new,p2new)
 	angle2 = getangle(vectnew)
 	if debug_angle:
-		print p0,p1,p2, ':',r2d(angle1), 
-		print r2d(getangle(getdiff(p1,p2))),
-		print r2d(angle2)
+		print(p0,p1,p2, ':',r2d(angle1)), 
+		print(r2d(getangle(getdiff(p1,p2)))),
+		print(r2d(angle2))
 	return angle2
 
 def curvesleft(p0,p1,p2):
@@ -136,13 +136,13 @@ def testmath():
 		angl = (theta/360.0)*2*3.14159
 		y=math.sin(angl)*1
 		x=math.cos(angl)*1
-		print theta,angl,findangle(x,y),x,y,compareangle(testa,angl)
+		print(theta,angl,findangle(x,y),x,y,compareangle(testa,angl))
 
 VPOINT_SKIPME=3
 debug_virtual_points = False
 def create_virtual_points(points,tags):
 	dbg = debug_virtual_points
-	if dbg: print 'creating virtual "on the line" points'
+	if dbg: print('creating virtual "on the line" points')
 	np = len(points)
 	newpoints = []
 	newtags = []
@@ -157,20 +157,20 @@ def create_virtual_points(points,tags):
 			newpoints+=[halfway_between(points[i],points[(i+1)%np])]
 			newtags+=[VPOINT_SKIPME]
 	if newtags[0]==0:
-		if dbg: print 'rotating. tags: ',newtags,'\npts: ',newpoints
+		if dbg: print('rotating. tags: ',newtags,'\npts: ',newpoints)
 		newtags.insert(0,newtags.pop())
 		newpoints.insert(0,newpoints.pop())
-		if dbg: print 'rotated. tags: ',newtags,'\npts: ',newpoints
+		if dbg: print('rotated. tags: ',newtags,'\npts: ',newpoints)
 	if dbg:
-		print 'points:   ',points
-		print 'newpoints:',newpoints
-		print 'tags:   ',tags
-		print 'newtags:',newtags
+		print ('points:   ',points)
+		print ('newpoints:',newpoints)
+		print ('tags:   ',tags)
+		print ('newtags:',newtags)
 	return newpoints, newtags
 
 def create_curves(newpoints,newtags):
 	dbg = debug_curves
-	if dbg: print 'creating bezier curve triplets, from points + tags'
+	if dbg: print('creating bezier curve triplets, from points + tags')
 	np = len(newpoints)
 	curves = []
 	curvetags = []
@@ -187,8 +187,8 @@ def create_curves(newpoints,newtags):
 				curvetags+=['l']
 			else: 
 				curvetags+=['r']
-	if dbg: print 'pts: ',newpoints,'\ncurves: ',curves
-	if dbg: print 'pt tags: ',newtags,'\ncurvetags: ',curvetags
+	if dbg: print ('pts: ',newpoints,'\ncurves: ',curves)
+	if dbg: print ('pt tags: ',newtags,'\ncurvetags: ',curvetags)
 	return curves, curvetags
 
 
@@ -239,28 +239,28 @@ def make_chunks(contours):
 	prev_cw=contours[0].clockwise
 	if dbg: 
 		for c in contours:
-			print str(c.clockwise)[0],
+			print(str(c.clockwise)[0],)
 		for d in chunks.keys(): 
 			num = len(chunks[d])
 			vals = chunks[d]
-			print '+=chunk',d,', num contours:',num
+			print ('+=chunk',d,', num contours:',num)
 			for v in vals:	
-				print '+===',v
+				print ('+===',v)
 
 	for c in contours:
 		if prev_cw == False and c.clockwise==True:
-			if dbg: print 'new ccw chunk, inc ',i,'to',i+1
+			if dbg: print ('new ccw chunk, inc ',i,'to',i+1)
 			i+=1
 		elif prev_cw == True and c.clockwise==True:
-			if dbg: print 'no hole. new ccw chunk, inc ',i,'to',i+1
+			if dbg: print ('no hole. new ccw chunk, inc ',i,'to',i+1)
 			i+=1
 		else: # False, False   or   True, False
-			if dbg: print 'stay in chunk',prev_cw,c.clockwise
-		if chunks.has_key(i):
-			if dbg: print 'had key',i,c.clockwise,',add to chunk'
+			if dbg: print ('stay in chunk',prev_cw,c.clockwise)
+		if i in chunks:
+			if dbg: print ('had key',i,c.clockwise,',add to chunk')
 			chunks[i] += [c]
 		else:
-			if dbg: print 'no key',i,c.clockwise, ',make new chunk'
+			if dbg: print( 'no key',i,c.clockwise, ',make new chunk')
 			chunks[i] = [c]
 		prev_cw = c.clockwise
 	return chunks
@@ -364,17 +364,17 @@ debug_contours=False
 def split_contours(charcode,module,points,point_tags,contour_indexes):
 	contours = []
 	if debug_contours: 
-		print '//number of contours:', len(contour_indexes)
-		print '//contour indexes:', contour_indexes
-		print '//number of points:', len(points)
-		print '//points',points
-		print '//point tags',point_tags
-		print '// point #, contour #, coords, tags:'
+		print ('//number of contours:', len(contour_indexes))
+		print ('//contour indexes:', contour_indexes)
+		print ('//number of points:', len(points))
+		print ('//points',points)
+		print ('//point tags',point_tags)
+		print ('// point #, contour #, coords, tags:')
 	counter = 0 
 	for i in range(0,len(contour_indexes)):
 		contour = Contour([],[])
 		for j in range(counter,contour_indexes[i]+1):
-			if debug_contours: print j,i,points[j],point_tags[j]
+			if debug_contours: print (j,i,points[j],point_tags[j])
 			contour.points+=[points[j]]
 			contour.tags+=[point_tags[j]]
 			counter += 1
@@ -382,8 +382,8 @@ def split_contours(charcode,module,points,point_tags,contour_indexes):
 		contours += [contour]
 	if debug_contours:
 		for c in contours:
-			print '---'
-			print c
+			print ('---')
+			print (c)
 	return contours
 	
 class Contour:
@@ -417,7 +417,7 @@ def is_clockwise(contour):
 	# a negative or a positive number (-2*pi, 2pi ????). 
 	# this tells you if its clockwise or ccw
 	dbg = debug_clockwise
-	if dbg: print 'clockwise? ',contour.name,'\npoints: ',contour.points
+	if dbg: print ('clockwise? ',contour.name,'\npoints: ',contour.points)
 	angle_total=0
 	ps = contour.points
 	np = len(ps)
@@ -429,9 +429,9 @@ def is_clockwise(contour):
 				change=-1*change
 		angle_total += change
 		if dbg: 
-			print 'pts:',ps[i],ps[(i+1)%np],ps[(i+2)%np]
-			print 'change:',r2d(change), 'new tot:', r2d(angle_total)
-	if dbg: print 'returning ',r2d(angle_total),'as', angle_total<=0
+			print ('pts:',ps[i],ps[(i+1)%np],ps[(i+2)%np])
+			print ('change:',r2d(change), 'new tot:', r2d(angle_total))
+	if dbg: print ('returning ',r2d(angle_total),'as', angle_total<=0)
 	return angle_total<=0
 	
 def calc_real_bbox(points):
@@ -460,29 +460,29 @@ def loadttf(ttf_file,characteri,font_size):
 	#characteri = ord(u'渴')
 	#characteri = ord(u'祖')
 	glyph_index = face.get_char_index(characteri)
-	face.load_glyph(glyph_index);
+	face.load_glyph(glyph_index)
 	slot = face.glyph
 	#print slot.format
 	f = slot.outline.flags 
 	#bbox = [[face.bbox.xMin,face.bbox.yMin],[face.bbox.xMax,face.bbox.yMax]]
 	if debug_freetype_py:
-		print 'flags:', f
-		print 0b11111111 & f
-		print 'outline owner', FT_OUTLINE_OWNER & f
-		print 'even odd fill', FT_OUTLINE_EVEN_ODD_FILL & f
-		print 'reverse fill', FT_OUTLINE_REVERSE_FILL & f
+		print ('flags:', f)
+		print (0b11111111 & f)
+		print ('outline owner', FT_OUTLINE_OWNER & f)
+		print ('even odd fill', FT_OUTLINE_EVEN_ODD_FILL & f)
+		print ('reverse fill', FT_OUTLINE_REVERSE_FILL & f)
 	#print slot.outline
 		for i in dir(face):
-			print i
-		print '--'
-		print 'bbox',bbox
+			print (i)
+		print ('--')
+		print ('bbox',bbox)
 		for i in dir(face.glyph):
-			print i
-		print '---'
-		print face.glyph.format
-		print FT_GLYPH_FORMAT_OUTLINE
-		print FT_GLYPH_FORMAT_COMPOSITE
-		print FT_GLYPH_FORMAT_BITMAP
+			print (i)
+		print ('---')
+		print (face.glyph.format)
+		print (FT_GLYPH_FORMAT_OUTLINE)
+		print (FT_GLYPH_FORMAT_COMPOSITE)
+		print (FT_GLYPH_FORMAT_BITMAP)
 
 		#print face.glyph.outline.contours
 	
@@ -589,7 +589,7 @@ if __name__ == '__main__':
 		try:
 			charcode = i
 			points,tags,contourlist,bbox = loadttf(options.font,charcode,int(options.size,10))
-			bboxes[i] = bbox;
+			bboxes[i] = bbox
 			contours =  split_contours(hex(charcode),options.module, points,tags,contourlist)
 			
 			for c in contours:
@@ -603,11 +603,11 @@ if __name__ == '__main__':
 			output += make_openscad_commands(hex(charcode),options.module, contours,chunks,bbox,int(options.height,10))
 			module_output += create_letter_if(charcode,options.module,int(options.height,10))
 
-			print '// unicode:',hex(charcode)#,' render:',unichr(charcode)
-			print '// number of contours:',len(contours)
-			print '// number of chunks:',len(chunks)
+			print ('// unicode:',hex(charcode))#,' render:',unichr(charcode)
+			print ('// number of contours:',len(contours))
+			print ('// number of chunks:',len(chunks))
 		except IndexError:
-			print '// unable to output character:',hex(charcode)
+			print ('// unable to output character:',hex(charcode))
 
 	if options.stringsfile != '':
 		file = open(options.stringsfile)
